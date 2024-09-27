@@ -40,10 +40,12 @@ class TasksController extends Controller
     {
         $request->validate([
             'content' => 'required|max:255',
+            'status' => 'required|max:10',
         ]);
         
         $task = new Task;
         $task->content = $request->content;
+        $task->status = $request->status;
         $task->save();
 
         // トップページへリダイレクトさせる
@@ -83,11 +85,13 @@ class TasksController extends Controller
     {
         $request->validate([
             'content' => 'required|max:255',
+            'status' => 'required|max:10',
         ]);
         
         $task = Task::findOrFail($id);
         // メッセージを更新
         $task->content = $request->content;
+        $task->status = $request->status;
         $task->save();
 
         // トップページへリダイレクトさせる
