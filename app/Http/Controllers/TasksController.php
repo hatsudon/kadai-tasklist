@@ -36,7 +36,6 @@ class TasksController extends Controller
     {
         $task = new Task;
 
-        // メッセージ作成ビューを表示
         return view('tasks.create', [
             'task' => $task,
         ]);
@@ -68,11 +67,16 @@ class TasksController extends Controller
     public function show(string $id)
     {
         $task = Task::findOrFail($id);
-
+        
+        if (\Auth::id() === $task->user_id) {
         // メッセージ詳細ビューでそれを表示
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
+            return view('tasks.show', [
+                'task' => $task,
+            ]);
+        }
+        else {
+            return redirect('/');
+        }
     }
 
     /**
@@ -82,10 +86,14 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        // メッセージ編集ビューでそれを表示
-        return view('tasks.edit', [
-            'task' => $task,
-        ]);
+        if (\Auth::id() === $task->user_id) {
+            return view('tasks.edit', [
+                'task' => $task,
+            ]);
+        }
+        else {
+            return redirect('/');
+        }
     }
 
     /**
@@ -99,10 +107,13 @@ class TasksController extends Controller
         ]);
         
         $task = Task::findOrFail($id);
+        
+        if (\Auth::id() === $task->user_id) {
         // メッセージを更新
         $task->content = $request->content;
         $task->status = $request->status;
         $task->save();
+        }
 
         // トップページへリダイレクトさせる
         return redirect('/');
